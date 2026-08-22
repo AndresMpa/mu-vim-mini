@@ -1,0 +1,74 @@
+snippet # "Multiline comment" b
+"""
+$1
+"""
+endsnippet
+
+# Print and end line
+snippet prt "print()" i
+print(${1:$2}, end='')
+endsnippet
+
+# Print in line
+snippet log "print(, end='')" b
+print(${1: $2 }, end='\n')
+endsnippet
+
+# Tipe of
+snippet type "Type of for debuggig" b
+print(type($1))
+endsnippet
+
+# Dinamic import
+snippet imp "form X import Y" b
+from $1 import $2 as $3
+endsnippet
+
+# Try block
+snippet try "Try except block" b
+try:
+    $1
+except $2:
+    ${3:continue}
+else:
+    ${4:print("It works")}
+finally:
+    ${5:print("Process has end")}
+endsnippet
+
+# Functions
+snippet fun "Function declaration" i
+def $1(${2:$3}):
+    ${4:$5}
+endsnippet
+
+# Help methods
+snippet help "This display helping functions on python" b
+help($1)
+dir($1)
+endsnippet
+
+# Lambda function
+snippet lam "Lambda function declaration" b
+lambda $1: $2
+endsnippet
+
+# Anonymous lambda function
+snippet afu "Anonymous lambda function declaration" i
+def $1($2):
+    return lambda $1: $2
+endsnippet
+
+# Basic object declaration
+snippet obj "Python object declaration" b
+class $1:
+    def __init__(self, $2):
+        self.$2 = $2
+endsnippet
+
+# Main function
+snippet ini "Basic python main function" b
+if __name__ == "__main__"($1):
+    ${2:pass}
+endsnippet
+

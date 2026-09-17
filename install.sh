@@ -23,7 +23,7 @@ fi
 if [ `which pacman` == "/usr/bin/pacman" ];
 then
 	echo "pacman"
-	sudo pacman -Syu nodejs npm
+	sudo pacman -Syu nodejs pnpm
 	if [ installed ];
 	then
 		sudo pacman -S neovim
@@ -32,7 +32,7 @@ elif [ `which apt` == "/usr/bin/apt" ];
 then
 	echo "apt"
 	sudo apt-get install nodejs
-	sudo apt-get install npm
+	curl -fsSL https://get.pnpm.io/install.sh | sh -
 	if [ installed ];
 	then
 		sudo apt-get install neovim

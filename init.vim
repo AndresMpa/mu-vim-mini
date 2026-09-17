@@ -42,11 +42,12 @@ set completeopt+=noselect
 set completeopt+=noinsert
 set completeopt+=menuone
 
-" Autosave
-" Autosave based on buffer
-"autocmd CursorHold * update
-" Autosave while writting
-autocmd CursorHold,CursorHoldI * update
+" Autosave (Space aw toggles)
+let g:muvim_autosave = 1
+augroup MuVimAutoSave
+  autocmd!
+  autocmd CursorHold,CursorHoldI * if get(g:, 'muvim_autosave', 1) | silent! update | endif
+augroup END
 
 
 let g:polyglot_disabled = ['markdown']
@@ -349,6 +350,7 @@ nmap <Leader>pu :PlugUpdate<CR>
 nmap <Leader>pd :PlugUpgrade<CR>
 
 " Extras
+nmap U <C-r>
 nmap <Leader>w :w<CR>
 nmap <Leader>q :q!<CR>
 nmap <Leader>h :bdelete<CR>
@@ -356,115 +358,33 @@ nmap <Leader>j :bprevious<CR>
 nmap <Leader>k :bnext<CR>
 nmap <Leader>b :Buffers<CR>
 nmap <Leader>l :ls<CR>
+nmap <Leader>H :%bd\|e#\|bd#<CR>
+nmap <Leader>vv :on<CR>
 nmap <Leader>vj :split<CR>
 nmap <Leader>vk :vsplit<CR>
 nnoremap <silent> <Leader>< :exe "resize " . (winheight(0) * 3/2)<CR>
 nnoremap <silent> <Leader>> :exe "resize " . (winheight(0) * 2/3)<CR>
+nmap <Leader>aw :call ToggleAutoSave()<CR>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """""""""""""""""""""""""""""""""""FUNCTION"""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 function! HelpMapping()
-  let info = [
-        \"Current features",
-        \"\n",
-        \"\n",
-        \"# Basics",
-        \"\n",
-        \"w -> Write",
-        \"q -> Quite",
-        \"h -> Close file",
-        \"nj -> Previous",
-        \"k -> Next",
-        \"nl -> List",
-        \"b -> Buffers",
-        \"\n",
-        \"\n",
-        \"zf#j creates a fold from the cursor down # lines".
-        \"zf/string creates a fold from the cursor to string"
-        \"zj moves the cursor to the next fold"
-        \"zk moves the cursor to the previous fold"
-        \"zo opens a fold at the cursor"
-        \"zO opens all folds at the cursor"
-        \"zm increases the foldlevel by one"
-        \"zM closes all open folds"
-        \"zr decreases the foldlevel by one"
-        \"zR decreases the foldlevel to zero — all folds will be open"
-        \"zd deletes the fold at the cursor"
-        \"zE deletes all folds"
-        \"[z move to start of open fold"
-        \"]z move to end of open fold"
-        \"\n",
-        \"\n",
-        \"# File control",
-        \"\n",
-        \"vj -> Split horizontally",
-        \"vk -> Split vertically",
-        \"< -> Hide prompt",
-        \"> -> Expand promt",
-        \"\n",
-        \"\n",
-        \"# Motion mappings",
-        \"\n",
-        \"ss -> Search by line",
-        \"sf -> Search by files",
-        \"? or \ -> Search by characters",
-        \"n -> Search with nerdtree",
-        \"ff -> Search with ag (folders)",
-        \"fs -> Search with fzf (files)",
-        \"a -> Search using Ack",
-        \"\n",
-        \"\n",
-        \"# Replace text",
-        \"\n",
-        \"R -> Replace a with b",
-        \"\n",
-        \"\n",
-        \"# Git (Inmediate commands)",
-        \"gpl -> Git pull",
-        \"gps -> Git push",
-        \"gii -> Git init",
-        \"gsh -> Git show",
-        \"gbl -> Git blame",
-        \"gst -> Git status",
-        \"gc -> Git commit",
-        \"gaa -> Git add",
-        \"grv -> Git remote",
-        \"\n",
-        \"# Git (Writting)",
-        \"\n",
-        \"ga  -> Git add",
-        \"gsw -> Git switch",
-        \"gco -> Git checkout",
-        \"gcb -> Git checkout -b",
-        \"gll -> Git pull",
-        \"gpp -> Git push",
-        \"ggg -> Git (General command)",
-        \"\n",
-        \"\n",
-        \"# CoC",
-        \"\n",
-        \"cd -> Coc definition",
-        \"ct -> Coc type",
-        \"cg -> Coc implementation",
-        \"cr -> Coc references",
-        \"\n",
-        \"# Formatter",
-        \"\n",
-        \"f -> Prettier",
-        \"\n",
-        \"\n",
-        \"# Maintenance",
-        \"\n",
-        \"pc -> PlugClean",
-        \"pi -> PlugInstall",
-        \"pu -> PlugUpdate",
-        \"pd -> PlugUpgrade"]
+  let maps = execute('map <leader>')
+  let maps .= "\n" . execute('nmap U')
+  let maps .= "\n" . execute('nnoremap <C-t>')
+  belowright 16new
+  setlocal buftype=nofile bufhidden=wipe noswapfile nobuflisted
+  setlocal nowrap
+  file [muvim-maps]
+  call setline(1, split(maps, "\n"))
+  nnoremap <buffer> <silent> q :bd!<CR>
+endfunction
 
-  for tip in info
-    execute "echo tip"
-  endfor
+function! ToggleAutoSave()
+  let g:muvim_autosave = !get(g:, 'muvim_autosave', 1)
+  echo g:muvim_autosave ? 'autosave on' : 'autosave off'
 endfunction
 
 nmap <Leader>hh :call HelpMapping()<CR>

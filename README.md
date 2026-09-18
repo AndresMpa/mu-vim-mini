@@ -40,31 +40,18 @@ On startup, **Startify** shows recent files and shortcuts (`f` find files, `n` f
 
 ## Quick start
 
-Needs Git and a package manager: **Homebrew** (macOS), **pacman**, **apt**, or **dnf**.
-
-Clone anywhere and let the script copy into `~/.config/nvim`:
-
-```
-git clone https://github.com/AndresMpa/mu-vim-mini.git
-cd mu-vim-mini
-./install.sh
-```
-
-Or clone straight into the config dir (same as Current):
+Needs Git and a package manager: **Homebrew** (macOS), **pacman**, **apt**, or **dnf**. Clone into the Neovim config directory, same as Current.
 
 ```
 git clone https://github.com/AndresMpa/mu-vim-mini.git ~/.config/nvim
 cd ~/.config/nvim
 ./install.sh
+nvim
 ```
 
 On a Mac, install [Homebrew](https://brew.sh) first. The script uses `brew install` and does not need sudo.
 
 Then:
-
-```
-nvim
-```
 
 ```
 <Space> p i
@@ -74,17 +61,15 @@ nvim
 
 On Windows, clone into `%LOCALAPPDATA%\nvim` and run Plug / CoC by hand.
 
-The installer uses [pnpm](https://pnpm.io/installation), not npm.
+The installer uses [pnpm](https://pnpm.io/installation), not npm. CoC formats JS/TS with **Biome**, HTML/Markdown with Prettier, and Vue with **Volar** (`@yaegassy/coc-volar`). Go is the extra language server.
 
 ## Uninstall
 
 Removes the config, vim-plug, CoC, plugins, cache, and the `old-nvim` backup. Does **not** uninstall Neovim or Homebrew/apt packages.
 
 ```
-cd ~/.config/nvim   # or the clone: cd mu-vim-mini
+cd ~/.config/nvim
 ./delete.sh
 ```
-
-If Mini was never copied into `~/.config/nvim`, the script also deletes the clone you ran it from.
 
 A [cheat sheet](https://github.com/AndresMpa/mu-vim-mini/blob/main/CheatSheet.md) covers native motions.

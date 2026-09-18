@@ -216,30 +216,32 @@ function! s:CenterStartify() abort
     let maxw = max([maxw, strdisplaywidth(line)])
   endfor
   let left = max([0, (&columns - maxw) / 2])
-  let lists_h = 8
-  let top = max([0, (&lines - len(art) - lists_h - 2) / 2])
-  let header = repeat([''], top)
+  " Current's alpha greeter uses 2 rows of padding above the mark.
+  let header = repeat([''], 2)
   for line in art
     call add(header, repeat(' ', left) . line)
   endfor
+  call add(header, '')
   let g:startify_custom_header = header
   let g:startify_padding_left = left
+  " Startify does not always pad section titles; bake the same indent in.
+  let g:startify_lists = [
+        \ { 'type': 'commands', 'header': [repeat(' ', left) . 'Commands'] },
+        \ ]
 endfunction
 
-call s:CenterStartify()
-augroup MuVimStartify
-  autocmd!
-  autocmd VimEnter * call s:CenterStartify()
-  autocmd VimResized * call s:CenterStartify() | if &filetype ==# 'startify' | silent! Startify | endif
-augroup END
-let g:startify_lists = [
-      \ { 'type': 'commands', 'header': ['Commands'] },
-      \ ]
 let g:startify_commands = [
       \ { 'f': ['Find files', ':Files'] },
       \ { 'n': ['File tree', ':NERDTreeToggle'] },
       \ { 'g': ['Git status', ':Git'] },
       \ ]
+
+call s:CenterStartify()
+augroup MuVimStartify
+  autocmd!
+  autocmd VimEnter * ++nested call s:CenterStartify()
+  autocmd VimResized * call s:CenterStartify() | if &filetype ==# 'startify' | silent! Startify | endif
+augroup END
 
 " Nvim THEME
 "colorscheme gruvbox

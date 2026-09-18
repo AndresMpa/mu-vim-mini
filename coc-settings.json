@@ -1,5 +1,23 @@
 {
-  "coc.preferences.formatOnSaveFiletypes": ["css", "markdown"],
+  "coc.preferences.formatOnSaveFiletypes": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "json",
+    "css",
+    "graphql",
+    "markdown"
+  ],
+  "prettier.disableLanguages": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "json",
+    "css",
+    "graphql"
+  ],
   "languageserver": {
     "dockerfile": {
       "command": "docker-langserver",

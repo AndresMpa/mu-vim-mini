@@ -70,6 +70,12 @@ install_packages() {
       return 1
       ;;
   esac
+
+  local pnpm_home="${HOME_DIR}/.local/share/pnpm"
+  mkdir -p "$pnpm_home"
+  if command_exists pnpm; then
+    PNPM_HOME="$pnpm_home" PATH="$pnpm_home:$PATH" pnpm add -g @biomejs/biome || true
+  fi
 }
 
 place_config() {

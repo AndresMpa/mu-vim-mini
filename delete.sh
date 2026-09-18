@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Uninstall Mini user data. Leaves the Neovim binary (and brew/apt packages).
+# Uninstall Mini user data. Leaves the Neovim binary (and package manager packages).
 #
 # Removes:
 #   - the nvim config directory

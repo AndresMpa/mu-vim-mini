@@ -54,6 +54,16 @@ let g:polyglot_disabled = ['markdown']
 
 syntax enable		" Change the natural rgb
 
+" Startify reads viminfo when the plugin loads. Set this before plug#begin.
+let g:startify_enable_unsafe = 1
+if has('nvim')
+  silent! call mkdir(stdpath('state') . '/shada', 'p')
+  set shada=!,'100,<50,s10,h
+else
+  silent! call mkdir(expand('~/.vim'), 'p')
+  set viminfo='100,<50,s10,h,n~/.vim/viminfo
+endif
+
 call plug#begin(expand('~/.config/nvim/plugged'))
 
 """""""""""""""""""""""""""""""""""""THEME"""""""""""""""""""""""""""""""""""""
@@ -221,13 +231,6 @@ let g:startify_commands = [
       \ { 'n': ['File tree', ':NERDTreeToggle'] },
       \ { 'g': ['Git status', ':Git'] },
       \ ]
-
-" Neovim uses shada, not viminfo. Without this, first launch prints
-" startify-faq-02 ("Can't read viminfo file").
-if has('nvim')
-  set shada=!,'100,<50,s10,h
-  let g:startify_enable_unsafe = 1
-endif
 
 call s:CenterStartify()
 augroup MuVimStartify

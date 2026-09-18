@@ -110,10 +110,6 @@ Plug 'tpope/vim-surround'                         " It helps to 'CRUD' parentesi
 Plug 'alvan/vim-closetag'                         " Autocomplete tags
 Plug 'sirver/ultisnips'                           " Snippers engine
 
-""""""""""""""""""""""""""""""""""DATA TRACKING"""""""""""""""""""""""""""""""""""""
-
-Plug 'wakatime/vim-wakatime'
-
 call plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -260,6 +256,7 @@ let g:incsearch#auto_nohlsearch = 1 " Remove the highligth after search
 let NERDTreeMouseMode=1             " let you use the mouse
 let NERDTreeQuitOnOpen=1            " quit nerdtree when you open a file
 let NERDTreeShowHidden=1            " show files or dir hidden by '.'
+let g:NERDTreeWinPos = "right"      " file tree on the right; terminal stays left
 
 " fzf
 " FZF will keep the history here
@@ -270,6 +267,7 @@ let g:fzf_action = {
   \ 'ctrl-v': 'vsplit',
   \ 'ctrl-s': 'split'
   \}
+let g:fzf_layout = { 'right': '40%' }
 
 " Ack
 if executable('ag')
@@ -498,21 +496,18 @@ nmap <Leader>hh :call HelpMapping()<CR>
 
 " Function
 function! OpenTerminal()
-  " move to right most buffer
-  execute "normal \<C-l>"
-  execute "normal \<C-l>"
-  execute "normal \<C-l>"
-  execute "normal \<C-l>"
+  execute "normal \<C-h>"
+  execute "normal \<C-h>"
+  execute "normal \<C-h>"
+  execute "normal \<C-h>"
 
   let bufNum = bufnr("%")
   let bufType = getbufvar(bufNum, "&buftype", "not found")
 
   if bufType == "terminal"
-    " close existing terminal
     execute "q"
   else
-    " open terminal
-    execute "vsp term://zsh"
+    execute "leftabove vsplit term://zsh"
 
     " turn off numbers
     execute "set nonu"

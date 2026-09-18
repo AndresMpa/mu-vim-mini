@@ -121,7 +121,7 @@ call plug#end()
 " vim-airline
 
 let g:airline_theme = 'cool'
-let g:muvim_default_colorscheme = ''
+let g:muvim_default_theme = 'mini'
 let g:airline_skip_empty_sections = 1
 let g:airline#extensions#ale#enabled = 1
 let g:airline#extensions#tagbar#enabled = 1

@@ -274,7 +274,8 @@ let g:fzf_action = {
   \ 'ctrl-v': 'vsplit',
   \ 'ctrl-s': 'split'
   \}
-let g:fzf_layout = { 'right': '40%' }
+" Floating modal in the middle of the window (not a side split).
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6, 'relative': v:true } }
 
 " Ack
 if executable('ag')

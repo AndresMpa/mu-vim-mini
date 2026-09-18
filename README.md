@@ -68,4 +68,10 @@ cd ~/.config/nvim
 ./delete.sh
 ```
 
+Does not remove `~/.config/muvim` (your themes).
+
+## Themes
+
+Shipped palettes (no extra theme plugins): **deep-ocean**, **gruvbox**, **mini** (Mini default). Copy one to `~/.config/muvim/themes/my-theme.vim` and edit the hex. `<Space> t h` cycles. `:MuvimTheme name` picks one; `:MuvimTheme none` restores this config's default. The choice is kept in `~/.config/muvim/active` and is shared with Current and VimScript.
+
 Native motions: [CheatSheet.md](./CheatSheet.md).

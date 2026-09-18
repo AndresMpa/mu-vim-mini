@@ -62,6 +62,7 @@ call plug#begin(expand('~/.config/nvim/plugged'))
 Plug 'ryanoasis/vim-devicons'                           " Icons for NERDTree
 Plug 'vim-airline/vim-airline'                          " Bar theme
 Plug 'vim-airline/vim-airline-themes'				            " Airline themes
+Plug 'mhinz/vim-startify'                                   " Start screen
 
 " Nvim
 "Plug 'morhetz/gruvbox', { 'as': 'gruvbox' }	            " Nvim theme
@@ -153,6 +154,22 @@ if !exists('g:airline_powerline_fonts')
   let g:airline#extensions#paste#symbol = "\uE0CF"
   let g:airline#extensions#tabline#left_alt_sep = ''
 endif
+
+" Startify (greeter)
+let g:startify_custom_header = [
+      \ '   MμVim Mini',
+      \ ]
+let g:startify_padding_left = 3
+let g:startify_lists = [
+      \ { 'type': 'commands', 'header': ['   Commands'] },
+      \ { 'type': 'files',    'header': ['   Recent'] },
+      \ { 'type': 'dir',      'header': ['   This directory'] },
+      \ ]
+let g:startify_commands = [
+      \ { 'f': ['Find files', ':Files'] },
+      \ { 'n': ['File tree', ':NERDTreeToggle'] },
+      \ { 'g': ['Git status', ':Git'] },
+      \ ]
 
 " Nvim THEME
 "colorscheme gruvbox

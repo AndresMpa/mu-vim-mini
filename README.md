@@ -36,6 +36,8 @@ If you want modules, use [VimScript](https://github.com/AndresMpa/mu-vim-vimscri
 
 The file is split into "slides": comment banners of `"` characters. Open `init.vim` and jump between those headers. That is the whole table of contents.
 
+On startup, **Startify** shows recent files and shortcuts (`f` find files, `n` file tree, `g` git status).
+
 ## Quick start
 
 Needs Git and a package manager: **Homebrew** (macOS), **pacman**, **apt**, or **dnf**.

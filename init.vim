@@ -461,7 +461,7 @@ nmap <Leader>vk :vsplit<CR>
 nnoremap <silent> <Leader>< :exe "resize " . (winheight(0) * 3/2)<CR>
 nnoremap <silent> <Leader>> :exe "resize " . (winheight(0) * 2/3)<CR>
 nmap <Leader>aw :call ToggleAutoSave()<CR>
-nmap <Leader>th :call MuvimCycleTheme()<CR>
+nmap <Leader>th :call MuvimThemePicker()<CR>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """""""""""""""""""""""""""""""""""FUNCTION"""""""""""""""""""""""""""""""""""""""

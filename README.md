@@ -17,13 +17,9 @@
   </p>
 </div>
 
-# Mini
+MμVim is three editor configs. This repository is **Mini**: one `init.vim` for Vim and Neovim, a template, and the one you take to a server.
 
-A single `init.vim` for Vim and Neovim. It is the first MμVim config, kept as a template and for machines where a Lua plugin manager is more trouble than it is worth.
-
-There is a walkthrough at [andresmpa.github.io/mu-vim-page](https://andresmpa.github.io/mu-vim-page/).
-
-If you want modules, use [VimScript](https://github.com/AndresMpa/mu-vim-vimscript). If you want the current Neovim stack, use [Current](https://github.com/AndresMpa/mu-vim).
+The other two are [Current](https://github.com/AndresMpa/mu-vim) (Lua, Neovim only) and [VimScript](https://github.com/AndresMpa/mu-vim-vimscript) (modular). Docs: [andresmpa.github.io/mu-vim-page](https://andresmpa.github.io/mu-vim-page/).
 
 ## Screenshots
 
@@ -32,15 +28,23 @@ If you want modules, use [VimScript](https://github.com/AndresMpa/mu-vim-vimscri
 ![Welcome](./.examples/nvim_2.png)
 ![Welcome](./.examples/nvim_3.png)
 
-## How to read it
+`init.vim` is split into "slides" (comment banners of `"`). Startify is the greeter (`f` find files, `n` file tree, `g` git status).
 
-The file is split into "slides": comment banners of `"` characters. Open `init.vim` and jump between those headers. That is the whole table of contents.
+## Prerequisites
 
-On startup, **Startify** shows recent files and shortcuts (`f` find files, `n` file tree, `g` git status).
+[Neovim](https://github.com/neovim/neovim/wiki/Installing-Neovim) or [Vim](https://www.vim.org/download.php). The installer pulls vim-plug, Node, and pnpm.
 
-## Quick start
+## Quick Start
 
-Needs Git and a package manager: **Homebrew** (macOS), **pacman**, **apt**, or **dnf**. Clone into the Neovim config directory, same as Current.
+| OS | Package manager | Config dir |
+| --- | --- | --- |
+| Linux Arch / Manjaro | pacman | `~/.config/nvim` |
+| Linux Debian / Ubuntu | apt | `~/.config/nvim` |
+| Linux Fedora / RHEL | dnf | `~/.config/nvim` |
+| macOS | [Homebrew](https://brew.sh) | `~/.config/nvim` |
+| Windows | clone by hand | `%LOCALAPPDATA%\nvim` |
+
+Linux and macOS:
 
 ```
 git clone https://github.com/AndresMpa/mu-vim-mini.git ~/.config/nvim
@@ -49,27 +53,19 @@ cd ~/.config/nvim
 nvim
 ```
 
-On a Mac, install [Homebrew](https://brew.sh) first. The script uses `brew install` and does not need sudo.
+On a Mac, install Homebrew first. The script uses `brew install` and does not need sudo.
 
-Then:
+Then `<Space> p i`, `:source %`, and `:CocInstall`. CoC uses **Biome** for JS/TS, Prettier for HTML/Markdown, **Volar** (`@yaegassy/coc-volar`) for Vue, and **Go** as the extra language server.
 
-```
-<Space> p i
-:source %
-:CocInstall
-```
-
-On Windows, clone into `%LOCALAPPDATA%\nvim` and run Plug / CoC by hand.
-
-The installer uses [pnpm](https://pnpm.io/installation), not npm. CoC formats JS/TS with **Biome**, HTML/Markdown with Prettier, and Vue with **Volar** (`@yaegassy/coc-volar`). Go is the extra language server.
+Windows: clone into `%LOCALAPPDATA%\nvim` and run Plug / CoC by hand.
 
 ## Uninstall
 
-Removes the config, vim-plug, CoC, plugins, cache, and the `old-nvim` backup. Does **not** uninstall Neovim or Homebrew/apt packages.
+Removes the config, vim-plug, CoC, cache, and `old-nvim`. Leaves Neovim and Homebrew/apt packages.
 
 ```
 cd ~/.config/nvim
 ./delete.sh
 ```
 
-A [cheat sheet](https://github.com/AndresMpa/mu-vim-mini/blob/main/CheatSheet.md) covers native motions.
+Native motions: [CheatSheet.md](./CheatSheet.md).

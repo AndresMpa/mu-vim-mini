@@ -61,14 +61,12 @@ Windows: clone into `%LOCALAPPDATA%\nvim` and run Plug / CoC by hand.
 
 ## Uninstall
 
-Removes the config, vim-plug, CoC, cache, and `old-nvim`. Leaves Neovim and Homebrew/apt packages.
+Removes the config, vim-plug, CoC, cache, `old-nvim`, and `~/.config/muvim` (palettes and last theme). Leaves Neovim and Homebrew/apt packages.
 
 ```
 cd ~/.config/nvim
 ./delete.sh
 ```
-
-Does not remove `~/.config/muvim` (your themes).
 
 ## Themes
 

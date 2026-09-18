@@ -7,6 +7,7 @@
 #   - vim-plug, plugged plugins, CoC data
 #   - nvim cache and state
 #   - the old-nvim backup from install.sh
+#   - shared palettes and the last theme (~/.config/muvim)
 #
 # Run: ./delete.sh
 set -u
@@ -19,6 +20,7 @@ DATA_DIR="${XDG_DATA_HOME:-$HOME_DIR/.local/share}/nvim"
 CACHE_DIR="${XDG_CACHE_HOME:-$HOME_DIR/.cache}/nvim"
 STATE_DIR="${XDG_STATE_HOME:-$HOME_DIR/.local/state}/nvim"
 COC_DIR="${HOME_DIR}/.config/coc"
+THEMES_DIR="${HOME_DIR}/.config/muvim"
 
 cd "$HOME_DIR" || exit 1
 
@@ -45,6 +47,7 @@ add_target "$CACHE_DIR" "Neovim cache"
 add_target "$STATE_DIR" "Neovim state"
 add_target "$COC_DIR" "CoC extensions"
 add_target "$BACKUP_DIR" "Backup from install.sh"
+add_target "$THEMES_DIR" "Shared palettes and last theme (~/.config/muvim)"
 add_target "$INSTALL_DIR" "Mini config (~/.config/nvim)"
 
 # Current's delete.lua removes the tree you ran it from. If Mini still
@@ -55,7 +58,7 @@ if looks_like_mini "$SCRIPT_DIR" \
   add_target "$SCRIPT_DIR" "This Mini clone"
 fi
 
-echo "This removes Mini config, vim-plug, CoC, plugins, and this clone if needed."
+echo "This removes Mini config, vim-plug, CoC, plugins, themes, and this clone if needed."
 echo "Neovim itself (the binary) is not uninstalled."
 echo
 

@@ -260,6 +260,7 @@ let g:incsearch#auto_nohlsearch = 1 " Remove the highligth after search
 let NERDTreeMouseMode=1             " let you use the mouse
 let NERDTreeQuitOnOpen=1            " quit nerdtree when you open a file
 let NERDTreeShowHidden=1            " show files or dir hidden by '.'
+let g:NERDTreeWinPos = "right"      " file tree on the right; terminal stays left
 
 " fzf
 " FZF will keep the history here

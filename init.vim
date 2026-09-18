@@ -121,6 +121,7 @@ call plug#end()
 " vim-airline
 
 let g:airline_theme = 'cool'
+let g:muvim_default_colorscheme = ''
 let g:airline_skip_empty_sections = 1
 let g:airline#extensions#ale#enabled = 1
 let g:airline#extensions#tagbar#enabled = 1
@@ -245,6 +246,8 @@ augroup MuVimStartify
   autocmd VimEnter * ++nested call s:CenterStartify()
   autocmd VimResized * call s:CenterStartify() | if &filetype ==# 'startify' | silent! Startify | endif
 augroup END
+
+execute 'source' fnamemodify($MYVIMRC, ':p:h') . '/themes/apply.vim'
 
 " Nvim THEME
 "colorscheme gruvbox
@@ -458,6 +461,7 @@ nmap <Leader>vk :vsplit<CR>
 nnoremap <silent> <Leader>< :exe "resize " . (winheight(0) * 3/2)<CR>
 nnoremap <silent> <Leader>> :exe "resize " . (winheight(0) * 2/3)<CR>
 nmap <Leader>aw :call ToggleAutoSave()<CR>
+nmap <Leader>th :call MuvimCycleTheme()<CR>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """""""""""""""""""""""""""""""""""FUNCTION"""""""""""""""""""""""""""""""""""""""

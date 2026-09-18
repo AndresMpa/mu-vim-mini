@@ -1,96 +1,147 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Install Mini the same way Current does, in shell:
+# Homebrew, pacman, apt, dnf. Never delete the directory we are running from.
+set -u
 
-instalation_dir=~/.config/nvim
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+HOME_DIR=${HOME:-}
+INSTALL_DIR="${HOME_DIR}/.config/nvim"
+BACKUP_DIR="${HOME_DIR}/.config/old-nvim"
 
-cd ..
-mv nvim-configuration nvim
+cd "$HOME_DIR" || exit 1
 
-sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+command_exists() {
+  command -v "$1" >/dev/null 2>&1
+}
 
-installed=1
+detect_manager() {
+  if command_exists brew; then
+    echo brew
+    return
+  fi
+  if command_exists pacman; then
+    echo pacman
+    return
+  fi
+  if command_exists apt-get; then
+    echo apt-get
+    return
+  fi
+  if command_exists dnf; then
+    echo dnf
+    return
+  fi
+  echo ""
+}
 
-if [ nvim ];
-then
-	echo "nvim"
-elif [ vim ];
-then
-	echo "vim"
+install_plug() {
+  local dest="${XDG_DATA_HOME:-$HOME_DIR/.local/share}/nvim/site/autoload/plug.vim"
+  mkdir -p "$(dirname "$dest")"
+  curl -fLo "$dest" --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+}
+
+install_packages() {
+  local manager=$1
+  echo "Detected package manager: $manager"
+  case "$manager" in
+    brew)
+      brew install neovim node pnpm
+      ;;
+    pacman)
+      sudo pacman -Sy --noconfirm neovim nodejs pnpm
+      ;;
+    apt-get)
+      sudo apt-get update
+      sudo apt-get install -y neovim nodejs
+      if ! command_exists pnpm; then
+        curl -fsSL https://get.pnpm.io/install.sh | sh -
+      fi
+      ;;
+    dnf)
+      sudo dnf install -y neovim nodejs
+      if ! command_exists pnpm; then
+        curl -fsSL https://get.pnpm.io/install.sh | sh -
+      fi
+      ;;
+    *)
+      echo "No supported package manager (need brew, pacman, apt-get, or dnf)."
+      echo "Install Neovim, Node.js, pnpm, and vim-plug by hand, then open nvim."
+      return 1
+      ;;
+  esac
+}
+
+place_config() {
+  if [ "$SCRIPT_DIR" = "$INSTALL_DIR" ]; then
+    echo "Already running from $INSTALL_DIR — nothing to copy."
+    return 0
+  fi
+
+  mkdir -p "$(dirname "$INSTALL_DIR")"
+
+  if [ -e "$INSTALL_DIR" ]; then
+    echo "A config already exists at $INSTALL_DIR."
+    printf "Keep it as a backup at %s? [y/N]: " "$BACKUP_DIR"
+    read -r keep
+    if [ "${keep:-n}" = "y" ] || [ "${keep:-n}" = "Y" ]; then
+      rm -rf "$BACKUP_DIR"
+      mv "$INSTALL_DIR" "$BACKUP_DIR"
+    else
+      rm -rf "$INSTALL_DIR"
+    fi
+  fi
+
+  mkdir -p "$INSTALL_DIR"
+  cp -R "$SCRIPT_DIR"/. "$INSTALL_DIR"/
+  echo "Copied Mini to $INSTALL_DIR"
+}
+
+printf "Use a custom config directory? (default %s) [y/N]: " "$INSTALL_DIR"
+read -r custom
+if [ "${custom:-n}" = "y" ] || [ "${custom:-n}" = "Y" ]; then
+  printf "Enter the path: "
+  read -r custom_path
+  if [ -n "${custom_path:-}" ]; then
+    case "$custom_path" in
+      ~*) INSTALL_DIR="${HOME_DIR}${custom_path#\~}" ;;
+      *) INSTALL_DIR=$custom_path ;;
+    esac
+  fi
+fi
+
+MANAGER=$(detect_manager)
+if [ -z "$MANAGER" ]; then
+  echo "Could not detect brew, pacman, apt-get, or dnf."
 else
-	installed=0
+  if [ "$MANAGER" != "brew" ]; then
+    echo "Administrator privileges are required to install system packages."
+    sudo -v || exit 1
+  fi
+  install_packages "$MANAGER" || true
 fi
 
-if [ `which pacman` == "/usr/bin/pacman" ];
-then
-	echo "pacman"
-	sudo pacman -Syu nodejs pnpm
-	if [ installed ];
-	then
-		sudo pacman -S neovim
-	fi
-elif [ `which apt` == "/usr/bin/apt" ];
-then
-	echo "apt"
-	sudo apt-get install nodejs
-	curl -fsSL https://get.pnpm.io/install.sh | sh -
-	if [ installed ];
-	then
-		sudo apt-get install neovim
-	fi
-else
-	echo "
-	Sorry I don't know how to make this
-	thing work in your OS yet, check the
-	following links to install what you
-	need manually"
-fi
+install_plug || echo "Could not download vim-plug."
+place_config
 
-echo "Are you using a custom config dir? (Default ~/.config)[y/n]: "
-read custom_dir
+cat <<EOF
 
-if [ $custom_dir == "y" ];
-then
-	echo "Write your custom dir name: "
-	read instalation_dir
-fi
+Mini is in place at:
+  $INSTALL_DIR
 
-if [ -e ~/.config/nvim ];
-then
-	mv ~/.config/nvim old-nvim
-	mv $(pwd) $instalation_dir
-else
-	if [ -e ~/.config ];
-	then
-		mv nvim $instalation_dir
-	else
-		mkdir ~/.config
-		mv nvim $instalation_dir
-	fi
-fi
+Open a new terminal, then:
 
-echo "
-	Thanks to try my nvim config files,
-	now, you need to close this terminal
-	and start a new one to see the changes
+  nvim
 
-	Then open the editor with:
+Inside Neovim:
 
-	$ nvim
+  :PlugInstall
+  :source %
+  :CocInstall
 
-	Then enjoy...
-	___
+Or <Space> p i for PlugInstall.
 
-	Short documentation
+Edit the config with:
 
-	If you want to edit the config file
-	go to:
-
-	$ nvim ~/.config/nvim/init.vim
-
-	There you can see the configs and
-	some esthetic dependencies, highlight,
-	themes, etc...
-	___
-"
-
-
+  nvim $INSTALL_DIR/init.vim
+EOF

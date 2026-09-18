@@ -38,14 +38,31 @@ The file is split into "slides": comment banners of `"` characters. Open `init.v
 
 ## Quick start
 
+Needs Git and a package manager: **Homebrew** (macOS), **pacman**, **apt**, or **dnf**.
+
+Clone anywhere and let the script copy into `~/.config/nvim`:
+
 ```
 git clone https://github.com/AndresMpa/mu-vim-mini.git
 cd mu-vim-mini
 ./install.sh
-nvim
 ```
 
+Or clone straight into the config dir (same as Current):
+
+```
+git clone https://github.com/AndresMpa/mu-vim-mini.git ~/.config/nvim
+cd ~/.config/nvim
+./install.sh
+```
+
+On a Mac, install [Homebrew](https://brew.sh) first. The script uses `brew install` and does not need sudo.
+
 Then:
+
+```
+nvim
+```
 
 ```
 <Space> p i

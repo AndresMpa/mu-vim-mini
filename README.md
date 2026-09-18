@@ -81,8 +81,10 @@ The installer uses [pnpm](https://pnpm.io/installation), not npm.
 Removes the config, vim-plug, CoC, plugins, cache, and the `old-nvim` backup. Does **not** uninstall Neovim or Homebrew/apt packages.
 
 ```
-cd ~/.config/nvim
+cd ~/.config/nvim   # or the clone: cd mu-vim-mini
 ./delete.sh
 ```
+
+If Mini was never copied into `~/.config/nvim`, the script also deletes the clone you ran it from.
 
 A [cheat sheet](https://github.com/AndresMpa/mu-vim-mini/blob/main/CheatSheet.md) covers native motions.

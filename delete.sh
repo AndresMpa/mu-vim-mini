@@ -3,6 +3,7 @@
 #
 # Removes:
 #   - the nvim config directory
+#   - this clone, if you ran ./delete.sh from mu-vim-mini
 #   - vim-plug, plugged plugins, CoC data
 #   - nvim cache and state
 #   - the old-nvim backup from install.sh
@@ -23,7 +24,7 @@ cd "$HOME_DIR" || exit 1
 
 looks_like_mini() {
   local dir=$1
-  [ -f "$dir/init.vim" ] && [ -f "$dir/install.sh" ]
+  [ -f "$dir/init.vim" ] && { [ -f "$dir/install.sh" ] || [ -f "$dir/delete.sh" ]; }
 }
 
 if ! looks_like_mini "$INSTALL_DIR" && ! looks_like_mini "$SCRIPT_DIR"; then
@@ -31,26 +32,44 @@ if ! looks_like_mini "$INSTALL_DIR" && ! looks_like_mini "$SCRIPT_DIR"; then
   exit 1
 fi
 
-echo "This removes Mini config, vim-plug, CoC, and plugins."
+PATHS=()
+WHYS=()
+
+add_target() {
+  PATHS+=("$1")
+  WHYS+=("$2")
+}
+
+add_target "$DATA_DIR" "vim-plug, site, CoC/nvim data"
+add_target "$CACHE_DIR" "Neovim cache"
+add_target "$STATE_DIR" "Neovim state"
+add_target "$COC_DIR" "CoC extensions"
+add_target "$BACKUP_DIR" "Backup from install.sh"
+add_target "$INSTALL_DIR" "Mini config (~/.config/nvim)"
+
+# Current's delete.lua removes the tree you ran it from. If Mini still
+# lives in the clone (install never copied it), delete that too.
+if looks_like_mini "$SCRIPT_DIR" \
+  && [ "$SCRIPT_DIR" != "$INSTALL_DIR" ] \
+  && [ "$SCRIPT_DIR" != "$HOME_DIR" ]; then
+  add_target "$SCRIPT_DIR" "This Mini clone"
+fi
+
+echo "This removes Mini config, vim-plug, CoC, plugins, and this clone if needed."
 echo "Neovim itself (the binary) is not uninstalled."
 echo
 
-print_target() {
-  local path=$1
-  local why=$2
+i=0
+while [ "$i" -lt "${#PATHS[@]}" ]; do
+  path=${PATHS[$i]}
+  why=${WHYS[$i]}
   if [ -e "$path" ]; then
     printf "  [*] %s\n      %s\n" "$path" "$why"
   else
     printf "  [ ] %s\n      %s\n" "$path" "$why"
   fi
-}
-
-print_target "$DATA_DIR" "vim-plug, site, CoC/nvim data"
-print_target "$CACHE_DIR" "Neovim cache"
-print_target "$STATE_DIR" "Neovim state"
-print_target "$COC_DIR" "CoC extensions"
-print_target "$BACKUP_DIR" "Backup from install.sh"
-print_target "$INSTALL_DIR" "Mini config"
+  i=$((i + 1))
+done
 
 echo
 printf "Delete the paths marked * ? [y/N]: "
@@ -60,19 +79,14 @@ if [ "${ok:-n}" != "y" ] && [ "${ok:-n}" != "Y" ]; then
   exit 0
 fi
 
-remove_path() {
-  local path=$1
+i=0
+while [ "$i" -lt "${#PATHS[@]}" ]; do
+  path=${PATHS[$i]}
   if [ -e "$path" ]; then
     echo "Removing $path"
     rm -rf "$path"
   fi
-}
-
-remove_path "$DATA_DIR"
-remove_path "$CACHE_DIR"
-remove_path "$STATE_DIR"
-remove_path "$COC_DIR"
-remove_path "$BACKUP_DIR"
-remove_path "$INSTALL_DIR"
+  i=$((i + 1))
+done
 
 echo "Mini user data is gone. Neovim is still installed."

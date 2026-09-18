@@ -278,9 +278,9 @@ endif
 
 " coc
 autocmd FileType json syntax match Comment +\/\/.\+$+
-"" Prettier, Emmet, HTML, CSS/Less/Sass, Json, JS/TS, Vue, Bash, Rust, Ruby, R, C/C++, PHP, Cmake, Go
-" Rust
+" Biome (JS/TS/JSON/CSS), Prettier (HTML/MD/Vue), tsserver, Go
 let g:coc_global_extensions = [
+  \'coc-biome',
   \'coc-prettier',
   \'coc-emmet',
   \'coc-html',
@@ -289,14 +289,7 @@ let g:coc_global_extensions = [
   \'coc-tsserver',
   \'coc-vetur',
   \'coc-sh',
-  \'coc-rls',
-  \'coc-solargraph',
-  \'coc-r-lsp',
-  \'coc-clangd',
-  \'coc-phpls',
-  \'coc-cmake',
-  \'coc-go',
-  \'coc-rls']
+  \'coc-go']
 
 " Multicursor
 let g:multi_cursor_select_all_word_key = '<A-n>'
@@ -577,10 +570,12 @@ nmap <Leader>xv :call OpenServer("vue")<CR>
 
 function! TriggerIdentation()
   let extention = expand('%:e')
+  let biome = ['js', 'jsx', 'ts', 'tsx', 'json', 'css', 'graphql', 'gql']
 
   if extention == "sh"
-    "execute "normal \<Plug>(coc-codeaction)"
     execute ":Shfmt"
+  elseif index(biome, extention) >= 0
+    call CocAction('format')
   else
     execute ":Prettier"
   endif

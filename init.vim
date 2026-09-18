@@ -155,51 +155,85 @@ if !exists('g:airline_powerline_fonts')
   let g:airline#extensions#tabline#left_alt_sep = ''
 endif
 
-" Startify (greeter) — same mark as Current, centered by display width.
-" startify#center() uses byte length, so UTF-8 braille never looks centered.
+" Startify greeter: Current's mark, kept as one block, centered in X and Y.
 let s:muvim_header = [
-      \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠀⠀⠀⠀⠀⠀⠀⠀⡀',
-      \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡆⡆⠀⠀⠀⠀⠀⢀⠜⡇',
-      \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠁⢰⠀⠀⠀⠀⢀⠊⢠⠀⠀⢠⠀⠀⠀⠀⢠',
-      \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠀⠀⡆⠀⠀⠠⠃⠀⡘⠀⠀⡘⠀⠀⠀⠀⡘',
-      \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢰⠀⡰⠁⠀⠀⠇⠀⠀⡇⠀⠀⠀⢀⠇',
-      \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠰⠀⠀⠀⠀⠞⠀⠀⠀⠰⠀⠀⢰⠑⠤⠤⠔⠱⠀⣿⡆⠀⠀⠀⣾⡗⠀⠀⠰⣿⠆',
-      \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡌⠀⠀⠀⠀⠀⠀⠸⣿⡄⠀⣸⣿⠁⠀⣴⣶⣶⡄⠀⠀⢰⣦⣶⣤⣴⣶⣄',
-      \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣷⢠⣿⠇⠀⠀⠀⠀⣿⡇⠀⠀⢸⣿⠀⣿⡏⠈⣿⡇',
-      \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⡟⠀⠀⠀⠀⠀⣿⡇⠀⠀⢸⣿⠀⣿⡇⠀⣿⡇',
-      \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠿⠁⠀⠀⠀⠀⠀⠿⠿⠿⠀⠸⠟⠀⠻⠇⠀⠿⠃',
+      \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
+      \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡆⡆⠀⠀⠀⠀⠀⢀⠜⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
+      \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠁⢰⠀⠀⠀⠀⢀⠊⢠⠀⠀⢠⠀⠀⠀⠀⢠⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
+      \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠀⠀⡆⠀⠀⠠⠃⠀⡘⠀⠀⡘⠀⠀⠀⠀⡘⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
+      \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢰⠀⡰⠁⠀⠀⠇⠀⠀⡇⠀⠀⠀⢀⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
+      \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠰⠀⠀⠀⠀⠞⠀⠀⠀⠰⠀⠀⢰⠑⠤⠤⠔⠱⠀⣿⡆⠀⠀⠀⣾⡗⠀⠀⠰⣿⠆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
+      \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡌⠀⠀⠀⠀⠀⠀⠸⣿⡄⠀⣸⣿⠁⠀⣴⣶⣶⡄⠀⠀⢰⣦⣶⣤⣴⣶⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
+      \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣷⢠⣿⠇⠀⠀⠀⠀⣿⡇⠀⠀⢸⣿⠀⣿⡏⠈⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
+      \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⡟⠀⠀⠀⠀⠀⣿⡇⠀⠀⢸⣿⠀⣿⡇⠀⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
+      \ '⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠿⠁⠀⠀⠀⠀⠀⠿⠿⠿⠀⠸⠟⠀⠻⠇⠀⠿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
       \ ]
 
-function! s:CenterStartify() abort
-  let blank = nr2char(0x2800)
-  let trimmed = []
-  for line in s:muvim_header
-    let t = substitute(line, '^' . blank . '*', '', '')
-    let t = substitute(t, blank . '*$', '', '')
-    call add(trimmed, t)
+function! s:IsArtBlank(c) abort
+  return a:c ==# ' ' || a:c ==# nr2char(0x2800)
+endfunction
+
+" Crop the whole drawing to one rectangle so Mu and vim stay aligned.
+function! s:TightHeader(lines) abort
+  let mincol = 9999
+  let maxcol = 0
+  let nonempty = []
+  for line in a:lines
+    let n = strchars(line)
+    let first = -1
+    let last = -1
+    let i = 0
+    while i < n
+      let c = strcharpart(line, i, 1)
+      if !s:IsArtBlank(c)
+        if first < 0
+          let first = i
+        endif
+        let last = i
+      endif
+      let i += 1
+    endwhile
+    if first >= 0
+      let mincol = min([mincol, first])
+      let maxcol = max([maxcol, last])
+      call add(nonempty, line)
+    endif
   endfor
+  if maxcol < mincol
+    return a:lines
+  endif
+  let out = []
+  for line in nonempty
+    call add(out, strcharpart(line, mincol, maxcol - mincol + 1))
+  endfor
+  return out
+endfunction
+
+function! s:CenterStartify() abort
+  let art = s:TightHeader(s:muvim_header)
   let maxw = 0
-  for t in trimmed
-    let maxw = max([maxw, strdisplaywidth(t)])
+  for line in art
+    let maxw = max([maxw, strdisplaywidth(line)])
   endfor
   let left = max([0, (&columns - maxw) / 2])
-  let header = ['']
-  for t in trimmed
-    call add(header, repeat(' ', left) . t)
+  let lists_h = 8
+  let top = max([0, (&lines - len(art) - lists_h - 2) / 2])
+  let header = repeat([''], top)
+  for line in art
+    call add(header, repeat(' ', left) . line)
   endfor
   let g:startify_custom_header = header
-  let g:startify_padding_left = max([3, left])
+  let g:startify_padding_left = left
 endfunction
 
 call s:CenterStartify()
 augroup MuVimStartify
   autocmd!
-  autocmd VimEnter,VimResized * call s:CenterStartify()
+  autocmd VimEnter * call s:CenterStartify()
+  autocmd VimResized * call s:CenterStartify() | if &filetype ==# 'startify' | silent! Startify | endif
 augroup END
 let g:startify_lists = [
-      \ { 'type': 'commands', 'header': ['   Commands'] },
-      \ { 'type': 'files',    'header': ['   Recent'] },
-      \ { 'type': 'dir',      'header': ['   This directory'] },
+      \ { 'type': 'commands', 'header': ['Commands'] },
       \ ]
 let g:startify_commands = [
       \ { 'f': ['Find files', ':Files'] },

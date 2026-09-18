@@ -229,7 +229,7 @@ endfunction
 let g:startify_commands = [
       \ { 'f': ['Find files', ':Files'] },
       \ { 'n': ['File tree', ':NERDTreeToggle'] },
-      \ { 'g': ['Git status', ':Git'] },
+      \ { 'g': ['Git status', ':GFiles?'] },
       \ ]
 
 " Neovim uses shada, not viminfo. Without this, first launch prints

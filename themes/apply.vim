@@ -378,6 +378,10 @@ function! MuvimThemeComplete(A, L, P) abort
 endfunction
 
 function! s:persist(name) abort
+  let dir = fnamemodify(s:active, ':h')
+  if !isdirectory(dir)
+    call mkdir(dir, 'p')
+  endif
   if !isdirectory(s:user_themes)
     call mkdir(s:user_themes, 'p')
   endif
@@ -387,7 +391,9 @@ function! s:persist(name) abort
     endif
     return
   endif
-  call writefile([a:name], s:active)
+  if writefile([a:name], s:active) != 0
+    echoerr 'Could not save theme to ' . s:active
+  endif
 endfunction
 
 function! s:default_name() abort
@@ -507,15 +513,21 @@ function! s:picker_finish(save) abort
   endif
   let s:picker.closing = 1
   let name = get(s:picker, 'preview', '')
+  if name ==# ''
+    let name = s:picker_line_name()
+  endif
   let saved = get(s:picker, 'saved', s:default_name())
   if exists('+mousemoveevent') && has_key(s:picker, 'old_move')
     let &mousemoveevent = s:picker.old_move
+  endif
+  if a:save && name !=# ''
+    call s:load(name, 1)
+    call s:persist(name)
   endif
   if has('nvim') && get(s:picker, 'win', 0) && nvim_win_is_valid(s:picker.win)
     call nvim_win_close(s:picker.win, v:true)
   endif
   if a:save && name !=# ''
-    call s:persist(name)
     echo 'MμVim theme: ' . name
   else
     call s:load(saved, 1)
@@ -524,7 +536,7 @@ function! s:picker_finish(save) abort
 endfunction
 
 function! s:picker_confirm() abort
-  call s:picker_preview()
+  let s:picker.preview = s:picker_line_name()
   call s:picker_finish(1)
 endfunction
 
@@ -575,6 +587,8 @@ function! s:picker_nvim(names, current) abort
   call nvim_win_set_cursor(win, [start, 0])
   setlocal cursorline nowrap nonumber norelativenumber signcolumn=no
   nnoremap <buffer> <silent> <CR> :call <SID>picker_confirm()<CR>
+  nnoremap <buffer> <silent> <Return> :call <SID>picker_confirm()<CR>
+  nnoremap <buffer> <silent> <2-LeftMouse> :call <SID>picker_confirm()<CR>
   nnoremap <buffer> <silent> <Esc> :call <SID>picker_cancel()<CR>
   nnoremap <buffer> <silent> q :call <SID>picker_cancel()<CR>
   nnoremap <buffer> <silent> <C-c> :call <SID>picker_cancel()<CR>

@@ -74,4 +74,13 @@ On Windows, clone into `%LOCALAPPDATA%\nvim` and run Plug / CoC by hand.
 
 The installer uses [pnpm](https://pnpm.io/installation), not npm.
 
+## Uninstall
+
+Removes the config, vim-plug, CoC, plugins, cache, and the `old-nvim` backup. Does **not** uninstall Neovim or Homebrew/apt packages.
+
+```
+cd ~/.config/nvim
+./delete.sh
+```
+
 A [cheat sheet](https://github.com/AndresMpa/mu-vim-mini/blob/main/CheatSheet.md) covers native motions.

@@ -292,7 +292,7 @@ map / <Plug>(incsearch-forward)
 map ? <Plug>(incsearch-backward)
 
 " NERDTree
-nmap <leader>n :NERDTreeFind<CR>
+nmap <leader>n :NERDTreeToggle<CR>
 nmap <leader>nt :NERDTreeToggle<CR>
 nmap <leader>nc :NERDTreeToggleVCS<CR>
 
@@ -323,8 +323,8 @@ nmap <Leader>ga :Git add<Space>
 nmap <Leader>gsw :Git switch<Space>
 nmap <Leader>gco :Git checkout<Space>
 nmap <Leader>gcb :Git checkout -b<Space>
-nmap <Leader>gll :Git pull origin<Space>
-nmap <Leader>gpp :Git push origin<Space>
+nmap <Leader>gll :call GitOnCurrentBranch('pull')<CR>
+nmap <Leader>gpp :call GitOnCurrentBranch('push')<CR>
 
 " To performe different actions
 nnoremap <Leader>ggg :Git<Space>
@@ -334,8 +334,13 @@ nmap <silent>cd <Plug>(coc-definition)
 nmap <silent>ct <Plug>(coc-type-definition)
 nmap <silent>cg <Plug>(coc-implementation)
 nmap <silent>cr <Plug>(coc-references)
-" Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
+" Use Tab / S-Tab like CoC pum (and like Current nvim-cmp).
+inoremap <silent><expr> <S-TAB>
+      \ coc#pum#visible() ? coc#pum#prev(1) :
+      \ coc#refresh()
+inoremap <silent><expr> <TAB>
+      \ coc#pum#visible() ? coc#pum#next(1) :
+      \ coc#refresh()
 
 " repeat
 "nmap <Plug>(RepeatUndo) U
@@ -385,6 +390,15 @@ endfunction
 function! ToggleAutoSave()
   let g:muvim_autosave = !get(g:, 'muvim_autosave', 1)
   echo g:muvim_autosave ? 'autosave on' : 'autosave off'
+endfunction
+
+function! GitOnCurrentBranch(action)
+  let branch = trim(system('git branch --show-current'))
+  if a:action ==# 'pull'
+    execute 'Git pull origin ' . branch
+  elseif a:action ==# 'push'
+    execute 'Git push origin ' . branch
+  endif
 endfunction
 
 nmap <Leader>hh :call HelpMapping()<CR>

@@ -418,6 +418,7 @@ function! s:load(name, quiet) abort
   endif
   call s:paint(g:muvim_palette)
   let g:colors_name = a:name
+  silent! doautocmd ColorScheme
   return 1
 endfunction
 
@@ -717,5 +718,13 @@ endfunction
 command! -nargs=? -complete=custom,MuvimThemeComplete MuvimTheme call MuvimApplyTheme(<q-args>)
 nnoremap <silent> <Plug>(MuvimThemePicker) :call MuvimThemePicker()<CR>
 nnoremap <silent> <Plug>(MuvimCycleTheme) :call MuvimThemePicker()<CR>
+
+augroup MuvimThemeRestore
+  autocmd!
+  autocmd VimEnter * ++nested call MuvimThemeRestore()
+  if has('nvim')
+    autocmd UIEnter * ++nested call MuvimThemeRestore()
+  endif
+augroup END
 
 call MuvimThemeRestore()

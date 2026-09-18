@@ -232,6 +232,13 @@ let g:startify_commands = [
       \ { 'g': ['Git status', ':Git'] },
       \ ]
 
+" Neovim uses shada, not viminfo. Without this, first launch prints
+" startify-faq-02 ("Can't read viminfo file").
+if has('nvim')
+  set shada=!,'100,<50,s10,h
+  let g:startify_enable_unsafe = 1
+endif
+
 call s:CenterStartify()
 augroup MuVimStartify
   autocmd!
